@@ -125,7 +125,7 @@ echo "Meteor installed" | indent
 
 echo "Installing invasion modules" | indent
 cd $BUILD_DIR/tests
-run_npm "install" | indent
+$VENDORED_NODE/bin/node $VENDORED_NODE/bin/npm install | indent
 sed -i s%node%$METEOR_BUILD_DIR/bin/node% *.js
 cd $BUILD_DIR
 
