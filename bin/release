@@ -7,5 +7,5 @@ addons:
   - mongohq:sandbox
 default_process_types:
   web: .meteor/heroku_build/bin/node .meteor/heroku_build/app/main.js
-  zombie: ZOMBIES=1 .meteor/heroku_build/bin/node .meteor/heroku_build/app/main.js
+  zombie: .meteor/heroku_build/bin/node tests/invasion.js
 EOF

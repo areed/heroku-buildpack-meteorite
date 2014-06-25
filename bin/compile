@@ -123,6 +123,11 @@ VENDORED_METEOR="$(mktmpdir meteor)"
 curl https://install.meteor.com | HOME="$VENDORED_METEOR" /bin/sh | indent
 echo "Meteor installed" | indent
 
+echo "Installing invasion modules" | indent
+cd $BUILD_DIR/tests
+npm install | indent
+cd $BUILD_DIR
+
 echo "Installing packages" | indent
 HOME="$BUILD_DIR" mrt install --force | indent
 echo "Building meteor bundle" | indent
