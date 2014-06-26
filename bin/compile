@@ -125,6 +125,7 @@ echo "Meteor installed" | indent
 
 echo "Installing invasion modules" | indent
 cd $BUILD_DIR/tests
+$VENDORED_NODE/bin/node $VENDORED_NODE/bin/npm install ./invasion | indent
 $VENDORED_NODE/bin/node $VENDORED_NODE/bin/npm install | indent
 sed -i s%node%.meteor/heroku_build/bin/node% *.js
 cd $BUILD_DIR
