@@ -143,7 +143,7 @@ rm "$CACHE_DIR"/bundle.tar.gz
 # PhantomJS
 ############################################
 # config
-PHANTOM_VERSION="1.9.7"
+PHANTOM_VERSION="1.9.2"
 
 # Buildpack URL
 ARCHIVE_NAME=phantomjs-${PHANTOM_VERSION}-linux-x86_64
