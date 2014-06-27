@@ -177,8 +177,7 @@ echo "Setting up PhantomJS paths in .profile.d"
 cat > "$BUILD_DIR"/.profile.d/phantom.sh <<EOF
 #!/bin/sh
 
-export PATH=\$PATH:${BUILD_DIR}/vendor/phantomjs/bin
-export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:${BUILD_DIR}/vendor/phantomjs/lib
+export PATH=\$PATH:/app/vendor/phantomjs/bin
 EOF
 
 # vendor node into the slug
