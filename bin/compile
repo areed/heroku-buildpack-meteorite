@@ -165,12 +165,20 @@ mv $CACHE_DIR/$ARCHIVE_NAME $BUILD_DIR/vendor/phantomjs
 ############################################
 # Prepare ENV vars
 ############################################
-echo "Setting up MONGO_URL in .profile.d"
 mkdir -p "$BUILD_DIR"/.profile.d
-cat > "$BUILD_DIR"/.profile.d/mongo.sh <<EOF
-  #!/bin/sh
 
-  export MONGO_URL=\${MONGO_URL:-\$MONGOHQ_URL};
+echo "Setting up MONGO_URL in .profile.d"
+cat > "$BUILD_DIR"/.profile.d/mongo.sh <<EOF
+#!/bin/sh
+
+export MONGO_URL=\${MONGO_URL:-\$MONGOHQ_URL};
+EOF
+echo "Setting up PhantomJS paths in .profile.d"
+cat > "$BUILD_DIR"/.profile.d/phantom.sh <<EOF
+#!/bin/sh
+
+export PATH=\$PATH:${BUILD_DIR}/vendor/phantomjs/bin
+export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:${BUILD_DIR}/vendor/phantomjs/lib
 EOF
 
 # vendor node into the slug
