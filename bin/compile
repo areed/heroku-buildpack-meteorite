@@ -175,11 +175,4 @@ echo "-----> Copy over environment profile.d scripts"
 mkdir -p $BUILD_DIR/.profile.d
 cp "$BUILDPACK_DIR/mongo.sh" $BUILD_DIR/.profile.d/mongo.sh
 cp "$BUILDPACK_DIR/mailgun.sh" $BUILD_DIR/.profile.d/mailgun.sh
-
-cat <<EOF > $BUILD_DIR/.profile.d/phantom.sh
-#!/bin/bash
-echo "Updating LD_LIBRARY_PATH in .profile.d";
-export LD_LIBRARY_PATH="${BUILD_DIR}/vendor/phantomjs/lib:\${LD_LIBRARY_PATH}";
-
-echo "\${LD_LIBRARY_PATH}"
-EOF
+cp "$BUILDPACK_DIR/phantom.sh" $BUILD_DIR/.profile.d/phantom.sh
