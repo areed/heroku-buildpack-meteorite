@@ -14,6 +14,7 @@ unset GIT_DIR
 BUILD_DIR=$1
 CACHE_DIR=$2
 LP_DIR=`cd $(dirname $0); cd ..; pwd`
+BUILDPACK_DIR="$(dirname $(dirname $0))"
 
 [ ! -d $BUILD_DIR ] && mkdir $BUILD_DIR
 [ ! -d $CACHE_DIR ] && mkdir $CACHE_DIR
@@ -76,7 +77,7 @@ if [ -f "${BUILD_DIR}/nodeversion" ]; then
 fi
 # add a warning if no version of node specified
 if [ "$requested_node_ver" == "" ]; then
-  requested_node_ver="0.10.26"
+  requested_node_ver="0.10.29"
   echo
   echo "No version of Node.js specified in nodeversion, using '${requested_node_ver}'" | indent
   echo
@@ -100,13 +101,12 @@ export npm_config_prefix="$VENDORED_MODULES"
 export CPATH="$INCLUDE_PATH"
 export CPPPATH="$INCLUDE_PATH"
 
-
 ############################################
 # install meteorite
 ############################################
 echo "-----> Installing meteorite with npm"
 
-run_npm "install meteorite -g"
+run_npm "install meteorite fibers -g"
 echo "Meteorite installed" | indent
 
 METEOR_BUILD_DIR="$BUILD_DIR/.meteor/heroku_build"
@@ -134,18 +134,44 @@ rm "$CACHE_DIR"/bundle.tar.gz
 ############################################
 
 ############################################
-# Prepare ENV vars
+# PhantomJS
 ############################################
-echo "Setting up MONGO_URL in .profile.d"
-mkdir -p "$BUILD_DIR"/.profile.d
-cat > "$BUILD_DIR"/.profile.d/mongo.sh <<EOF
-  #!/bin/sh
+# config
+PHANTOM_VERSION="1.9.2"
 
-  export MONGO_URL=\${MONGO_URL:-\$MONGOHQ_URL};
-EOF
+# Buildpack URL
+ARCHIVE_NAME=phantomjs-${PHANTOM_VERSION}-linux-x86_64
+FILE_NAME=${ARCHIVE_NAME}.tar.bz2
+BUILDPACK_PHANTOMJS_PACKAGE=https://phantomjs.googlecode.com/files/${FILE_NAME}
+
+if ! [ -e $CACHE_DIR/$FILE_NAME ]; then
+echo "-----> Fetching PhantomJS ${VERSION} binaries at ${BUILDPACK_PHANTOMJS_PACKAGE}"
+  curl $BUILDPACK_PHANTOMJS_PACKAGE -s -o $CACHE_DIR/$FILE_NAME
+fi
+
+echo "-----> Extracting PhantomJS ${VERSION} binaries to ${BUILD_DIR}/vendor/phantomjs"
+mkdir -p $CACHE_DIR/$ARCHIVE_NAME
+mkdir -p $BUILD_DIR/vendor
+tar jxf $CACHE_DIR/$FILE_NAME -C $CACHE_DIR
+mv $CACHE_DIR/$ARCHIVE_NAME $BUILD_DIR/vendor/phantomjs
+
+PATH="$BUILD_DIR/vendor/phantomjs/bin:$PATH"
+############################################
 
 # vendor node into the slug
 PATH="$METEOR_BUILD_DIR/bin:$PATH"
 echo "-----> Vendoring node into slug"
 mkdir -p "$METEOR_BUILD_DIR/bin"
 cp "$VENDORED_NODE/bin/node" "$METEOR_BUILD_DIR/bin/node"
+
+echo "-----> Move to app directory: /programs/server"
+cd "$METEOR_BUILD_DIR"/app/programs/server
+
+echo "-----> Run npm install"
+npm install
+
+# copy over environment
+echo "-----> Copy over environment profile.d scripts"
+mkdir -p $BUILD_DIR/.profile.d
+cp "$BUILDPACK_DIR/mongo.sh" $BUILD_DIR/.profile.d/mongo.sh
+cp "$BUILDPACK_DIR/mailgun.sh" $BUILD_DIR/.profile.d/mailgun.sh
