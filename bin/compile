@@ -175,3 +175,4 @@ echo "-----> Copy over environment profile.d scripts"
 mkdir -p $BUILD_DIR/.profile.d
 cp "$BUILDPACK_DIR/mongo.sh" $BUILD_DIR/.profile.d/mongo.sh
 cp "$BUILDPACK_DIR/mailgun.sh" $BUILD_DIR/.profile.d/mailgun.sh
+cp "$BUILDPACK_DIR/phantom.sh" $BUILD_DIR/.profile.d/phantom.sh
