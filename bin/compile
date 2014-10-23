@@ -142,7 +142,7 @@ PHANTOM_VERSION="1.9.7"
 # Buildpack URL
 ARCHIVE_NAME=phantomjs-${PHANTOM_VERSION}-linux-x86_64
 FILE_NAME=${ARCHIVE_NAME}.tar.bz2
-BUILDPACK_PHANTOMJS_PACKAGE=https://bitbucket.org/ariya/phantomjs/downloads/${FILE_NAME}
+BUILDPACK_PHANTOMJS_PACKAGE=https://s3-us-west-2.amazonaws.com/secondline-assets/${FILE_NAME}
 
 if ! [ -e $CACHE_DIR/$FILE_NAME ]; then
 echo "-----> Fetching PhantomJS ${VERSION} binaries at ${BUILDPACK_PHANTOMJS_PACKAGE}"
